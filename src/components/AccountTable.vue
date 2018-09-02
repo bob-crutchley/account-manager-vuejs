@@ -1,32 +1,37 @@
 <template>
-  <b-table striped :sort-by.sync="sortBy"
-           :sort-desc.sync="sortDesc" :items="items"
-           :fields="fields" class="account-table pagination-centered">
-      <template slot="actions" slot-scope="data">
-          <div>
-              <button class="action-btn btn btn-info">
-                  <font-awesome-icon class="icon" icon="edit" />
-              </button>
-              <button class="action-btn btn btn-danger"  @click="deleteAccount(data.item.id)">
-                  <font-awesome-icon class="icon" icon="trash-alt" />
-              </button>
-          </div>
-      </template>
-  </b-table>
+    <div class="account-table pagination-centered">
+        <div class="float-right account-util-btn ">
+            <button class="action-btn btn btn-info" @click="getAllAccounts()">
+                <font-awesome-icon class="icon" icon="sync-alt" />
+            </button>
+            <button class="action-btn btn btn-success"  @click="deleteAccount(data.item.id)">
+                <font-awesome-icon class="icon" icon="plus" />
+            </button>
+        </div>
+        <b-table striped :sort-by.sync="sortBy"
+               :sort-desc.sync="sortDesc" :items="items"
+               :fields="fields">
+            <AccountTableRow></AccountTableRow>
+      </b-table>
+
+    </div>
 </template>
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios';
+import AccountTableRow from './AccountTableRow';
+
 
 export default {
     name: 'AccountTable',
+    components: {AccountTableRow},
     data() {
         return {
             sortBy: 'id',
             sortDesc: false,
-            items: [],
+            items: [{'id': 'test', forename: 'test', surname: 'test' }],
             fields: [
                 {
                     key: 'id',
@@ -45,25 +50,23 @@ export default {
                 },
                 {
                     key: 'actions',
-                    label: '',
+                    label: 'Actions',
                     sortable: false
                 }
-            ],
-            isActive: 1
+            ]
         }
     },
     methods: {
         getAllAccounts: function() {
-            axios.get("http://localhost:8080/api/v1").then(response => {
+            axios.get("/all").then(response => {
                 this.items = response.data;
             }).catch(e => 1);
         },
         deleteAccount: function(id) {
-            axios.delete("http://localhost:8080/api/v1/delete/" + id).then(response => {
-                this.items = response.data;
+            axios.delete("/delete/" + id).then(response => {
                 this.items.forEach((account, index) => {
                     if (account.id === response.data.id) {
-                        this.items.splice(index, index)
+                        this.items.splice(index, 1)
                     }
                 })
             }).catch(e => 1);
@@ -98,8 +101,12 @@ a {
     margin-left: 0.1em;
     margin-right: 0.1em;
 }
+.account-util-btn {
+    margin-bottom: 1em;
+}
 .icon {
     width: 1em;
     height: 1em;
 }
+
 </style>

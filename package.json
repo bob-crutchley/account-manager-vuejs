@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "dev-build": "vue-cli-service build --mode development",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -13,6 +14,8 @@
     "@fortawesome/vue-fontawesome": "^0.1.1",
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.11",
+    "circular-json": "^0.5.5",
+    "express": "^4.16.3",
     "i": "^0.3.6",
     "npm": "^6.4.1",
     "vue": "^2.5.17"
