@@ -4,8 +4,12 @@
            :fields="fields" class="account-table pagination-centered">
       <template slot="actions" slot-scope="data">
           <div>
-              <button class="action-btn btn btn-info"><font-awesome-icon class="icon" icon="edit" /></button>
-              <button class="action-btn btn btn-danger"><font-awesome-icon class="icon" icon="trash-alt" /></button>
+              <button class="action-btn btn btn-info">
+                  <font-awesome-icon class="icon" icon="edit" />
+              </button>
+              <button class="action-btn btn btn-danger"  @click="deleteAccount(data.item.id)">
+                  <font-awesome-icon class="icon" icon="trash-alt" />
+              </button>
           </div>
       </template>
   </b-table>
@@ -52,6 +56,16 @@ export default {
         getAllAccounts: function() {
             axios.get("http://localhost:8080/api/v1").then(response => {
                 this.items = response.data;
+            }).catch(e => 1);
+        },
+        deleteAccount: function(id) {
+            axios.delete("http://localhost:8080/api/v1/delete/" + id).then(response => {
+                this.items = response.data;
+                this.items.forEach((account, index) => {
+                    if (account.id === response.data.id) {
+                        this.items.splice(index, index)
+                    }
+                })
             }).catch(e => 1);
         }
     },
